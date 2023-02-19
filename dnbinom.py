@@ -1,7 +1,7 @@
 
 
 
-def neg_binom(p, r, k):
+def neg_binom(k,r,p):
     """Returns the probability of k failures before r successes in a sequence of
     Bernoulli trials with probability of success p."""
     if p < 0 or p > 1:
@@ -29,10 +29,10 @@ def neg_binom(p, r, k):
     return binom(r + k - 1, k) * p ** r * (1 - p) ** k
 
 
-print("prob, suc, tot-suc")
+print("tot-suc, suc, prob" )
 
-a = float(input())
+a = int(input())
 b = int(input())
-c = int(input())
-rv = neg_binom(a, b, c)
-print("RV : \n", rv)
+c = float(input())
+out = neg_binom(a,b,c)
+print("RV : \n", out)
