@@ -219,3 +219,4 @@ while (True):
         out = phyper(x, M1, M2, n)
 
     print("OUT:", out, "\n")
+    delay = int(input())
