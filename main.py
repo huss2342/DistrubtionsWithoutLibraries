@@ -1,6 +1,19 @@
 # ********************************************HELPER*************************************************#
-import scipy.stats as stats
-from scipy.stats import hypergeom
+# import scipy.stats as stats
+# from scipy.stats import hypergeom
+def factorial(n):
+    """
+    Calculates the factorial of a non-negative integer n.
+
+    :param n: The integer to calculate the factorial of.
+    :return: The factorial of n.
+    """
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+
 def choose(n, k):
     """
     Calculates the binomial coefficient (n choose k).
@@ -20,6 +33,7 @@ def choose(n, k):
         result *= (n - i)
         result //= (i + 1)
     return result
+
 
 # ********************************************1-DNBINOM*************************************************#
 
@@ -80,9 +94,37 @@ def pnbinom(x, size, prob):
     return cdf
 
 
-# AFTER ADDING ALL THESE METHODS... ADD EXP AND VAR CLACULATOR
 # ********************************************3-DBINOM*************************************************#
+def dbinom(x, size, prob):
+    """
+    Calculates the probability mass function (PMF) of the binomial distribution.
+
+    :param x: The number of successes.
+    :param size: The number of trials.
+    :param prob: The probability of success.
+    :return: The probability mass function of the binomial distribution at x.
+    """
+    coef = factorial(size) / (factorial(x) * factorial(size - x))  # Calculate the binomial coefficient
+    return coef * prob ** x * (1 - prob) ** (size - x)  # Calculate the PMF
+
+
 # ********************************************4-PBINOM*************************************************#
+def pbinom(q, size, prob, lower_tail=True):
+    """
+    Calculates the cumulative distribution function (CDF) of the binomial distribution.
+
+    :param q: The upper limit of the summation for the CDF.
+    :param size: The number of trials.
+    :param prob: The probability of success.
+    :param lower_tail: If True, calculates the lower tail (default). If False, calculates the upper tail.
+    :return: The cumulative distribution function of the binomial distribution at q.
+    """
+    if lower_tail:
+        return sum([dbinom(i, size, prob) for i in range(q + 1)])
+    else:
+        return sum([dbinom(i, size, prob) for i in range(q, size + 1)])
+
+
 # ********************************************5-DHYPER*************************************************#
 def dhyper(x, m, n, k):
     """
@@ -122,12 +164,15 @@ def phyper(x, M1, M2, n1):
 
 # ********************************************PRINTING*************************************************#
 while (True):
-    # goal is the python line... x,M1,M2,sampleSize
+    #   print(pbinom(2, 5, 0.23)) #testing
 
     # selecting a choice
-    print("1:dnbinom    2:pnbinom")
-    print("3:           4:")
-    print("5:dhyper     6:phyper")
+    print("1:dnbinom  2:pnbinom")
+    print("3:dbinom   4:pbinom")
+    print("5:dhyper   6:phyper")
+    print("7:         8:      ")
+    print("9:         10:      ")
+    print("11:        12:      ")
     choice = int(input())
 
     # method based on choice
@@ -144,6 +189,18 @@ while (True):
         b = int(input())
         c = float(input())
         out = pnbinom(a, b, c)
+    elif (choice == 3):  # 2:dbinom
+        print("x,size,prob");
+        a = int(input())
+        b = int(input())
+        c = float(input())
+        out = dbinom(a, b, c)
+    elif (choice == 4):  # 2:pbinom
+        print("x,size,prob");
+        a = int(input())
+        b = int(input())
+        c = float(input())
+        out = pbinom(a, b, c)
     elif (choice == 5):  # 5:dhyper
         print("x, M1(not tag),")
         print("M2(tag), sample")
