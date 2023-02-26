@@ -14,8 +14,6 @@ def factorial(n):
     for i in range(2, n + 1):
         result *= i
     return result
-
-
 def choose(n, k):
     """
     Calculates the binomial coefficient (n choose k).
@@ -35,7 +33,6 @@ def choose(n, k):
         result *= (n - i)
         result //= (i + 1)
     return result
-
 def exp(x):
     """
     Calculates the exponential of x.
@@ -47,9 +44,7 @@ def exp(x):
         term *= x / (i + 1)
     return sum
 
-
 # ********************************************1-DNBINOM*************************************************#
-
 def dnbinom(k, r, p):
     """Returns the probability of k failures before r successes in a sequence of
     Bernoulli trials with probability of success p."""
@@ -76,7 +71,6 @@ def dnbinom(k, r, p):
 
     # Calculate the probability mass function of the negative binomial distribution
     return binom(r + k - 1, k) * p ** r * (1 - p) ** k
-
 
 # ********************************************2-QNBINOM*************************************************#
 def pnbinom(x, size, prob):
@@ -106,7 +100,6 @@ def pnbinom(x, size, prob):
 
     return cdf
 
-
 # ********************************************3-DBINOM*************************************************#
 def dbinom(x, size, prob):
     """
@@ -119,7 +112,6 @@ def dbinom(x, size, prob):
     """
     coef = factorial(size) / (factorial(x) * factorial(size - x))  # Calculate the binomial coefficient
     return coef * prob ** x * (1 - prob) ** (size - x)  # Calculate the PMF
-
 
 # ********************************************4-PBINOM*************************************************#
 def pbinom(q, size, prob, lower_tail=True):
@@ -137,7 +129,6 @@ def pbinom(q, size, prob, lower_tail=True):
     else:
         return sum([dbinom(i, size, prob) for i in range(q, size + 1)])
 
-
 # ********************************************5-DHYPER*************************************************#
 def dhyper(x, m, n, k):
     """
@@ -154,7 +145,6 @@ def dhyper(x, m, n, k):
     denominator = choose(N, k)  # Calculate the denominator of the PMF
     return numerator / denominator  # Calculate the PMF
 
-
 # ********************************************6-PHYPER*************************************************#
 def phyper(x, M1, M2, n1):
     N = M1 + M2  # population size
@@ -168,9 +158,7 @@ def phyper(x, M1, M2, n1):
         cdf += (choose(M, i) * choose(N - M, n - i)) / choose(N, n)
     return cdf
 
-
 # ********************************************7-PPOIS*************************************************#
-
 def ppois(q, mu, lower_tail=True):
     """
     Calculates the cumulative distribution function (CDF) of the Poisson distribution.
@@ -189,16 +177,20 @@ def ppois(q, mu, lower_tail=True):
     else:
         return 1 - p
 
+#================================================================================================================#
 
-# ********************************************PRINTING*************************************************#
-while (True):
-  #  print(ppois(2, 3)) #0.42319008112684364
+# ********************************************PNORM*************************************************#
+# ********************************************-QNORM-**************************************************#
+# ********************************************-QQNORM-*************************************************#
+# ********************************************-QQLINE-*************************************************#
 
-    # selecting a choice
+# ********************************************-PRINTING DISTS-*********************************************#
+def dists():
+    # selecting a choice of distribution
     print("1:dnbinom  2:pnbinom")
     print("3:dbinom   4:pbinom")
     print("5:dhyper   6:phyper")
-    print("7:ppois    8:      ")
+    print("7:ppois           ")
     choice = int(input())
 
     # method based on choice
@@ -234,4 +226,30 @@ while (True):
         out = ppois(int(input()), int(input()))
 
     print("OUT:", out, "\n")
+    return
+# ********************************************-PRINTING NORMS-*********************************************#
+def norms():
+    return
+
+#*******************************************-PRINTING expVar()-*********************************************#
+def expVar():
+    return
+
+#********************************************-SELECTING-*************************************************#
+while (True):
+    #selecting the mode
+    print("1: distibutions")
+    print("2: norms")
+    print("3: exp(), var()")
+
+    selection = int(input())
+
+    if(selection == 1):
+        dists() #sends you to printing dists
+
+    elif(selection == 2):
+        norms() #sends you to printing norms
+    elif (selection == 3):
+        expVar()#sends you to printing exp()var()
+
     delay = input()
