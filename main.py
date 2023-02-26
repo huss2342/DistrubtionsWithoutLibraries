@@ -1,6 +1,8 @@
 # ********************************************HELPER*************************************************#
 # import scipy.stats as stats
 # from scipy.stats import hypergeom
+#import scipy.stats as stats
+from scipy.stats import poisson
 def factorial(n):
     """
     Calculates the factorial of a non-negative integer n.
@@ -33,6 +35,17 @@ def choose(n, k):
         result *= (n - i)
         result //= (i + 1)
     return result
+
+def exp(x):
+    """
+    Calculates the exponential of x.
+    """
+    term = 1.0
+    sum = 0.0
+    for i in range(100):
+        sum += term
+        term *= x / (i + 1)
+    return sum
 
 
 # ********************************************1-DNBINOM*************************************************#
@@ -157,66 +170,68 @@ def phyper(x, M1, M2, n1):
 
 
 # ********************************************7-PPOIS*************************************************#
-# ********************************************8-PNORM*************************************************#
-# ********************************************9-QNORM**************************************************#
-# ********************************************10-QQNORM*************************************************#
-# ********************************************11-QQLINE*************************************************#
+
+def ppois(q, mu, lower_tail=True):
+    """
+    Calculates the cumulative distribution function (CDF) of the Poisson distribution.
+
+    :param q: the quantile(s)
+    :param mu: the mean parameter of the Poisson distribution
+    :param lower_tail: if True, returns P(X <= q), otherwise returns P(X > q)
+
+    :return: the CDF of the Poisson distribution evaluated at q
+    """
+    p = 0.0
+    for k in range(int(q) + 1):
+        p += ((mu ** k) / factorial(k)) * exp(-mu)
+    if lower_tail:
+        return p
+    else:
+        return 1 - p
+
 
 # ********************************************PRINTING*************************************************#
 while (True):
-    #   print(pbinom(2, 5, 0.23)) #testing
+  #  print(ppois(2, 3)) #0.42319008112684364
 
     # selecting a choice
     print("1:dnbinom  2:pnbinom")
     print("3:dbinom   4:pbinom")
     print("5:dhyper   6:phyper")
-    print("7:         8:      ")
-    print("9:         10:      ")
-    print("11:        12:      ")
+    print("7:ppois    8:      ")
     choice = int(input())
 
     # method based on choice
     if (choice == 1):  # 1:dnbinom
         print("tot-suc, suc, prob")
-        a = int(input())
-        b = int(input())
-        c = float(input())
-        out = dnbinom(a, b, c)
+        out = dnbinom(int(input()), int(input()), float(input()))
+
     elif (choice == 2):  # 2:pnbinom
         print("ex: x>n, n>suc");
         print("n-suc, suc, prob")
-        a = int(input())
-        b = int(input())
-        c = float(input())
-        out = pnbinom(a, b, c)
-    elif (choice == 3):  # 2:dbinom
+        out = pnbinom(int(input()), int(input()), float(input()))
+
+    elif (choice == 3):  # 3:dbinom
         print("x,size,prob");
-        a = int(input())
-        b = int(input())
-        c = float(input())
-        out = dbinom(a, b, c)
-    elif (choice == 4):  # 2:pbinom
+        out = dbinom(int(input()), int(input()), float(input()))
+
+    elif (choice == 4):  # 4:pbinom
         print("x,size,prob");
-        a = int(input())
-        b = int(input())
-        c = float(input())
-        out = pbinom(a, b, c)
+        out = pbinom(int(input()), int(input()), float(input()))
+
     elif (choice == 5):  # 5:dhyper
         print("x, M1(not tag),")
         print("M2(tag), sample")
-        x = int(input())
-        M1 = int(input())
-        M2 = int(input())
-        n = int(input())
-        out = dhyper(x, M1, M2, n)
+        out = dhyper(int(input()), int(input()), int(input()), int(input()))
+
     elif (choice == 6):  # 6:phyper
         print("x, M1(not tag),")
         print("M2(tag), sample")
-        x = int(input())
-        M1 = int(input())
-        M2 = int(input())
-        n = int(input())
-        out = phyper(x, M1, M2, n)
+        out = phyper(int(input()), int(input()), int(input()), int(input()))
+
+    elif (choice == 7):  # 7:ppois
+        print("q, lambda")
+        out = ppois(int(input()), int(input()))
 
     print("OUT:", out, "\n")
-    delay = int(input())
+    delay = input()
