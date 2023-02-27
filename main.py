@@ -1,8 +1,6 @@
 # ********************************************HELPER*************************************************#
-# import scipy.stats as stats
-# from scipy.stats import hypergeom
-#import scipy.stats as stats
-from scipy.stats import poisson
+#from scipy.special import erfinv
+import math
 def factorial(n):
     """
     Calculates the factorial of a non-negative integer n.
@@ -43,7 +41,158 @@ def exp(x):
         sum += term
         term *= x / (i + 1)
     return sum
+def sqrt(x):
+    # Babylonian method to approximate the square root of a number
+    if x == 0:
+        return 0
+    a = x
+    b = 1.0
+    while abs(a - b) > 0.0001:
+        a, b = (a + b) / 2, x / a
+    return a
+def erf(x):
+    # Approximation of the error function using a truncated Taylor series
+    p = 0.3275911
+    a1 = 0.254829592
+    a2 = -0.284496736
+    a3 = 1.421413741
+    a4 = -1.453152027
+    a5 = 1.061405429
+    t = 1.0 / (1.0 + p * x)
+    poly = a1 * t + a2 * t ** 2 + a3 * t ** 3 + a4 * t ** 4 + a5 * t ** 5
+    return 1.0 - poly * x ** 2
+def sign(x):
+    if x < 0:
+        return -1
+    elif x > 0:
+        return 1
+    else:
+        return 0
+def polevl(x, coefs, N):
+    ans = 0
+    power = len(coefs) - 1
+    for coef in coefs:
+        ans += coef * x**power
+        power -= 1
+    return ans
+#chad from stackoverflow
+def p1evl(x, coefs, N):
+    return polevl(x, [1] + coefs, N)
+def erfinv(z):
+    if z < -1 or z > 1:
+        raise ValueError("`z` must be between -1 and 1 inclusive")
 
+    if z == 0:
+        return 0
+    if z == 1:
+        return math.inf
+    if z == -1:
+        return -math.inf
+
+    # From scipy special/cephes/ndrti.c
+    def ndtri(y):
+        # approximation for 0 <= abs(z - 0.5) <= 3/8
+        P0 = [
+            -5.99633501014107895267E1,
+            9.80010754185999661536E1,
+            -5.66762857469070293439E1,
+            1.39312609387279679503E1,
+            -1.23916583867381258016E0,
+        ]
+
+        Q0 = [
+            1.95448858338141759834E0,
+            4.67627912898881538453E0,
+            8.63602421390890590575E1,
+            -2.25462687854119370527E2,
+            2.00260212380060660359E2,
+            -8.20372256168333339912E1,
+            1.59056225126211695515E1,
+            -1.18331621121330003142E0,
+        ]
+
+        # Approximation for interval z = sqrt(-2 log y ) between 2 and 8
+        # i.e., y between exp(-2) = .135 and exp(-32) = 1.27e-14.
+        P1 = [
+            4.05544892305962419923E0,
+            3.15251094599893866154E1,
+            5.71628192246421288162E1,
+            4.40805073893200834700E1,
+            1.46849561928858024014E1,
+            2.18663306850790267539E0,
+            -1.40256079171354495875E-1,
+            -3.50424626827848203418E-2,
+            -8.57456785154685413611E-4,
+        ]
+
+        Q1 = [
+            1.57799883256466749731E1,
+            4.53907635128879210584E1,
+            4.13172038254672030440E1,
+            1.50425385692907503408E1,
+            2.50464946208309415979E0,
+            -1.42182922854787788574E-1,
+            -3.80806407691578277194E-2,
+            -9.33259480895457427372E-4,
+        ]
+
+        # Approximation for interval z = sqrt(-2 log y ) between 8 and 64
+        # i.e., y between exp(-32) = 1.27e-14 and exp(-2048) = 3.67e-890.
+        P2 = [
+            3.23774891776946035970E0,
+            6.91522889068984211695E0,
+            3.93881025292474443415E0,
+            1.33303460815807542389E0,
+            2.01485389549179081538E-1,
+            1.23716634817820021358E-2,
+            3.01581553508235416007E-4,
+            2.65806974686737550832E-6,
+            6.23974539184983293730E-9,
+        ]
+
+        Q2 = [
+            6.02427039364742014255E0,
+            3.67983563856160859403E0,
+            1.37702099489081330271E0,
+            2.16236993594496635890E-1,
+            1.34204006088543189037E-2,
+            3.28014464682127739104E-4,
+            2.89247864745380683936E-6,
+            6.79019408009981274425E-9,
+        ]
+
+        s2pi = 2.50662827463100050242
+        code = 1
+
+        if y > (1.0 - 0.13533528323661269189):      # 0.135... = exp(-2)
+            y = 1.0 - y
+            code = 0
+
+        if y > 0.13533528323661269189:
+            y = y - 0.5
+            y2 = y * y
+            x = y + y * (y2 * polevl(y2, P0, 4) / p1evl(y2, Q0, 8))
+            x = x * s2pi
+            return x
+
+        x = math.sqrt(-2.0 * math.log(y))
+        x0 = x - math.log(x) / x
+
+        z = 1.0 / x
+        if x < 8.0:                 # y > exp(-32) = 1.2664165549e-14
+            x1 = z * polevl(z, P1, 8) / p1evl(z, Q1, 8)
+        else:
+            x1 = z * polevl(z, P2, 8) / p1evl(z, Q2, 8)
+
+        x = x0 - x1
+        if code != 0:
+            x = -x
+
+        return x
+
+    result = ndtri((z + 1) / 2.0) / math.sqrt(2)
+
+    return result
 # ********************************************1-DNBINOM*************************************************#
 def dnbinom(k, r, p):
     """Returns the probability of k failures before r successes in a sequence of
@@ -180,8 +329,36 @@ def ppois(q, mu, lower_tail=True):
 #================================================================================================================#
 
 # ********************************************PNORM*************************************************#
+def pnorm(x, mu=0, sigma=1):
+    """
+    Calculates the cumulative distribution function (CDF) of the standard normal distribution.
+
+    :param x: The point at which to evaluate the CDF.
+    :param mu: The mean of the normal distribution. Default is 0.
+    :param sigma: The standard deviation of the normal distribution. Default is 1.
+    :return: The probability that a random variable from a standard normal distribution is less than or equal to x.
+    """
+    z = (x - mu) / sigma
+    t = 1 / (1 + 0.2316419 * abs(z))
+    d = 0.3989423 * exp(-z * z / 2)
+    prob = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))))
+    if z > 0:
+        prob = 1 - prob
+    return prob
+
 # ********************************************-QNORM-**************************************************#
+def qnorm(q, mean=0, std=1):
+    """Returns the x-value that corresponds to the given quantile q in the normal distribution with mean and standard deviation."""
+    if q < 0 or q > 1:
+        raise ValueError("Quantile q must be between 0 and 1.")
+
+    # Approximation for x-value using inverse CDF of standard normal distribution
+    # Uses the identity x = mean + std * qnorm(p), where p is the probability corresponding to q
+    p = (1 + erf((q - 0.5) / sqrt(2))) / 2
+    return mean + std * sqrt(2) * erfinv(2 * q - 1)
+
 # ********************************************-QQNORM-*************************************************#
+
 # ********************************************-QQLINE-*************************************************#
 
 # ********************************************-PRINTING DISTS-*********************************************#
@@ -225,10 +402,28 @@ def dists():
         print("q, lambda")
         out = ppois(int(input()), int(input()))
 
-    print("OUT:", out, "\n")
+    print("OUT:", out)
     return
 # ********************************************-PRINTING NORMS-*********************************************#
 def norms():
+    # selecting a choice of distribution
+    print("1:Pnorm   2:Qnorm")
+    print("3:QQnorm  4:QQline")
+    choice = int(input())
+
+    if(choice == 1):
+        print("q, mean, std")
+        out = pnorm(int(input()), int(input()), int(input()))
+    elif (choice == 2):
+        print("percentile=p")
+        print("p, mean, std")
+        out = qnorm(float(input()), int(input()), int(input()))
+    elif (choice == 3):
+        out=1
+    elif (choice == 4):
+        out = 1
+
+    print("OUT:", out)
     return
 
 #*******************************************-PRINTING expVar()-*********************************************#
@@ -236,6 +431,7 @@ def expVar():
     return
 
 #********************************************-SELECTING-*************************************************#
+#print(qnorm(0.9,19000,2100))
 while (True):
     #selecting the mode
     print("1: distibutions")
@@ -245,11 +441,13 @@ while (True):
     selection = int(input())
 
     if(selection == 1):
-        dists() #sends you to printing dists
-
+        dists() #sends you to printing distributions
     elif(selection == 2):
         norms() #sends you to printing norms
     elif (selection == 3):
         expVar()#sends you to printing exp()var()
 
     delay = input()
+    print("\n")
+    print("\n")
+    print("\n")
