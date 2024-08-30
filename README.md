@@ -1,10 +1,10 @@
-# Statistical Calculator Script for Casio fx-cg50
+# Statistical Calculator for Casio fx-cg50
 
-This Python script provides custom implementations of various statistical distributions and functions, designed to be used directly on the Casio fx-cg50 calculator's Python environment.
+This project provides a Python script with custom implementations of various statistical distributions and functions, designed to be used on the Casio fx-cg50 calculator's Python environment without the need for external libraries.
 
 ## Purpose
 
-The goal of this script is to provide a set of statistical tools that can be used on the Casio fx-cg50 calculator without relying on external libraries. It implements several probability distributions and normal distribution functions from scratch.
+The goal of this project is to provide a set of statistical tools that can be used on the Casio fx-cg50 calculator, which has limited library support. By implementing these functions from scratch, users can perform advanced statistical calculations directly on their calculator.
 
 ## Features
 
@@ -20,29 +20,30 @@ The goal of this script is to provide a set of statistical tools that can be use
 
 ## Usage
 
-1. Transfer the `statistical_calculator.py` file to your Casio fx-cg50 calculator.
+1. Transfer the `main.py` file to your Casio fx-cg50 calculator.
 2. Run the script in the calculator's Python environment.
-3. You will see a menu with the following options:
-   ```
-   1: distributions
-   2: norms
-   3: exp(), var()
-   ```
-4. Choose an option by entering the corresponding number.
-5. Follow the prompts to input the required parameters for each calculation.
-6. The result will be displayed on the screen.
+3. Follow the on-screen prompts to select the type of calculation you want to perform.
+4. Input the required parameters as requested.
+5. The result will be displayed on the screen.
 
-### Example: Calculating Binomial Distribution
+## Development and Testing
 
-1. Choose option 1 for distributions
-2. Select option 3 for dbinom
-3. Enter the required parameters (x, size, prob) when prompted
-4. The result will be displayed
+This project includes a set of unit tests to verify the accuracy of the implemented functions. To run the tests:
 
-## Note
+1. Ensure you have Python installed on your computer.
+2. Navigate to the project directory in a terminal.
+3. Run the command: `python -m unittest unit_tests.test_statistical_functions`
 
-This script is designed to be run as a standalone program on the calculator. It provides an interactive interface for performing various statistical calculations without the need for external libraries or additional setup.
+Note: The tests are designed with some leniency to account for slight variations in floating-point arithmetic that may occur on different systems.
+
+## License and Usage
+
+This code is open and free for anyone to use, modify, and distribute. There are no restrictions on its usage. Feel free to incorporate it into your projects or make improvements as you see fit.
 
 ## Contributing
 
-If you'd like to contribute to this project, feel free to suggest improvements or additional statistical functions that could be useful for calculator-based computations.
+Contributions to improve the implementations or add new statistical functions are welcome. If you make improvements, consider submitting a pull request to benefit other users.
+
+## Disclaimer
+
+While efforts have been made to ensure accuracy, these implementations may not match the precision of specialized statistical software. They are intended for educational purposes and general use on a graphing calculator.
