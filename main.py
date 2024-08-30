@@ -432,22 +432,23 @@ def expVar():
 
 #********************************************-SELECTING-*************************************************#
 #print(qnorm(0.9,19000,2100))
-while (True):
-    #selecting the mode
-    print("1: distibutions")
-    print("2: norms")
-    print("3: exp(), var()")
+def run_interactive_menu():
+    while True:
+        print("1: distributions")
+        print("2: norms")
+        print("3: exp(), var()")
 
-    selection = int(input())
+        selection = int(input())
 
-    if(selection == 1):
-        dists() #sends you to printing distributions
-    elif(selection == 2):
-        norms() #sends you to printing norms
-    elif (selection == 3):
-        expVar()#sends you to printing exp()var()
+        if selection == 1:
+            dists()
+        elif selection == 2:
+            norms()
+        elif selection == 3:
+            expVar()
 
-    delay = input()
-    print("\n")
-    print("\n")
-    print("\n")
+        delay = input()
+        print("\n" * 3)
+
+if __name__ == "__main__":
+    run_interactive_menu()
